@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@openfeature-sandbox/openfeature-minimalist-provider": [
+        "libs/openfeature-minimalist-provider/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

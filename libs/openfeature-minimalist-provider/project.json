@@ -1,0 +1,34 @@
+{
+  "name": "openfeature-minimalist-provider",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/openfeature-minimalist-provider/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/openfeature-minimalist-provider",
+        "main": "libs/openfeature-minimalist-provider/src/index.ts",
+        "tsConfig": "libs/openfeature-minimalist-provider/tsconfig.lib.json",
+        "assets": ["libs/openfeature-minimalist-provider/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/openfeature-minimalist-provider/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/openfeature-minimalist-provider"],
+      "options": {
+        "jestConfig": "libs/openfeature-minimalist-provider/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
