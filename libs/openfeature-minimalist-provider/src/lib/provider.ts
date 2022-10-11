@@ -8,7 +8,7 @@ import {
 import { FlagConfiguration } from './flagConfiguration'
 import { bareResolution } from './resolutionDetail'
 
-export default class MinimalistProvider implements Provider {
+export class MinimalistProvider implements Provider {
   readonly metadata = {
     name: 'Minimalist Provider',
   } as const

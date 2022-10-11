@@ -1,5 +1,5 @@
 {
-  "name": "@openfeature-sandbox/openfeature-minimalist-provider",
+  "name": "@openfeature-sandbox/openfeature-hooks",
   "version": "0.0.1",
   "type": "commonjs",
   "license": "MIT",

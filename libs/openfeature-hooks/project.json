@@ -1,0 +1,34 @@
+{
+  "name": "openfeature-hooks",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/openfeature-hooks/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/openfeature-hooks",
+        "main": "libs/openfeature-hooks/src/index.ts",
+        "tsConfig": "libs/openfeature-hooks/tsconfig.lib.json",
+        "assets": ["libs/openfeature-hooks/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/openfeature-hooks/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/openfeature-hooks"],
+      "options": {
+        "jestConfig": "libs/openfeature-hooks/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

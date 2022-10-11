@@ -1,1 +1,1 @@
-export * from './lib/openfeature-minimalist-provider'
+export * from './lib/provider'
