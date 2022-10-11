@@ -1,15 +1,10 @@
-import styled from '@emotion/styled';
-import NxWelcome from './nx-welcome';
-
-const StyledApp = styled.div`
-  // Your style here
-`;
-
+import {Container, Typography} from '@mui/material'
+import Weather from './Weather';
 export function App() {
   return (
-    <StyledApp>
-      <NxWelcome title="demo-react-weather-app" />
-    </StyledApp>
+    <Container maxWidth="xs">
+        <Weather />
+    </Container>
   );
 }
 
