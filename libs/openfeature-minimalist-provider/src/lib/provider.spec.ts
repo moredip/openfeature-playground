@@ -10,8 +10,7 @@ describe(MinimalistProvider, () => {
     const provider = new MinimalistProvider()
     const resolution = await provider.resolveBooleanEvaluation(
       'unknown-flag',
-      true,
-      EMPTY_EVAL_CONTEXT
+      true
     )
     verifyResolution(resolution, { expectedValue: true })
   })
@@ -20,8 +19,7 @@ describe(MinimalistProvider, () => {
     const provider = new MinimalistProvider()
     const resolution = await provider.resolveBooleanEvaluation(
       'unknown-flag',
-      false,
-      EMPTY_EVAL_CONTEXT
+      false
     )
     verifyResolution(resolution, { expectedValue: false })
   })
@@ -35,8 +33,7 @@ describe(MinimalistProvider, () => {
 
     const resolution = await provider.resolveBooleanEvaluation(
       'go-bananas',
-      false,
-      EMPTY_EVAL_CONTEXT
+      false
     )
     verifyResolution(resolution, { expectedValue: true })
   })
@@ -48,11 +45,7 @@ describe(MinimalistProvider, () => {
 
     const provider = new MinimalistProvider(flags)
 
-    const evaluation = provider.resolveBooleanEvaluation(
-      'numeric-flag',
-      false,
-      EMPTY_EVAL_CONTEXT
-    )
+    const evaluation = provider.resolveBooleanEvaluation('numeric-flag', false)
 
     expect(evaluation).rejects.toThrow(TypeMismatchError)
   })
@@ -68,5 +61,3 @@ function verifyResolution<U>(
 ) {
   expect(resolution.value).toBe(expectedValue)
 }
-
-const EMPTY_EVAL_CONTEXT = {}

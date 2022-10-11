@@ -10,7 +10,7 @@ import { bareResolution } from './resolutionDetail'
 
 export default class MinimalistProvider implements Provider {
   readonly metadata = {
-    name: 'Minimalist pRovider',
+    name: 'Minimalist Provider',
   } as const
   private _flagConfiguration: FlagConfiguration
 
@@ -37,24 +37,24 @@ export default class MinimalistProvider implements Provider {
   resolveStringEvaluation(
     flagKey: string,
     defaultValue: string,
-    context: EvaluationContext
+    context: EvaluationContext = {}
   ): Promise<ResolutionDetails<string>> {
-    throw new Error()
+    throw new Error('Not supported')
   }
 
   resolveNumberEvaluation(
     flagKey: string,
     defaultValue: number,
-    context: EvaluationContext
+    context: EvaluationContext = {}
   ): Promise<ResolutionDetails<number>> {
-    throw new Error()
+    throw new Error('Not supported')
   }
 
   resolveObjectEvaluation<T extends JsonValue>(
     flagKey: string,
     defaultValue: T,
-    context: EvaluationContext
+    context: EvaluationContext = {}
   ): Promise<ResolutionDetails<T>> {
-    throw new Error()
+    throw new Error('Not supported')
   }
 }
