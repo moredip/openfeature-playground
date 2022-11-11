@@ -1,11 +1,12 @@
-import { ResolutionDetails, OpenFeature } from '@openfeature/js-sdk'
+import { ResolutionDetails } from '@openfeature/js-sdk'
 import { useEffect, useState } from 'react'
+import { useOpenFeatureClient } from './provider'
 
 export function useBooleanFeatureFlag(flagName: string, defaultValue: boolean) {
   const [flagEvaluationDetails, setFlagEvaluationDetails] =
     useState<ResolutionDetails<boolean> | null>(null)
 
-  const client = OpenFeature.getClient()
+  const client = useOpenFeatureClient()
 
   useEffect(() => {
     async function getFlag() {
