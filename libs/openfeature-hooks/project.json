@@ -3,22 +3,33 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/openfeature-hooks/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/openfeature-hooks",
-        "main": "libs/openfeature-hooks/src/index.ts",
         "tsConfig": "libs/openfeature-hooks/tsconfig.lib.json",
-        "assets": ["libs/openfeature-hooks/*.md"]
+        "project": "libs/openfeature-hooks/package.json",
+        "entryFile": "libs/openfeature-hooks/src/index.ts",
+        "external": ["@emotion/react/jsx-runtime"],
+        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "compiler": "babel",
+        "assets": [
+          {
+            "glob": "libs/openfeature-hooks/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/openfeature-hooks/**/*.ts"]
+        "lintFilePatterns": ["libs/openfeature-hooks/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
@@ -29,6 +40,5 @@
         "passWithNoTests": true
       }
     }
-  },
-  "tags": []
+  }
 }
