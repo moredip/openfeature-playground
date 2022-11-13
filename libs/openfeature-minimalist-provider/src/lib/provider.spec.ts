@@ -1,49 +1,42 @@
 import { ResolutionDetails, TypeMismatchError } from '@openfeature/js-sdk'
 import { MinimalistProvider } from './provider'
 describe(MinimalistProvider, () => {
-  it('resolves to default true value for an unrecognized bool flag', async () => {
-    const provider = new MinimalistProvider()
-    const resolution = await provider.resolveBooleanEvaluation(
-      'unknown-flag',
-      true
-    )
-    verifyResolution(resolution, { expectedValue: true })
-  })
-
-  it('resolves to default false value for an unrecognized bool flag', async () => {
-    const provider = new MinimalistProvider()
-    const resolution = await provider.resolveBooleanEvaluation(
-      'unknown-flag',
-      false
-    )
-    verifyResolution(resolution, { expectedValue: false })
-  })
-
-  it('resolves to correct value for a known bool flag', async () => {
+  let provider: MinimalistProvider
+  beforeEach(() => {
     const flags = {
-      'go-bananas': true,
+      'a-string-flag': 'configured-value',
+      'a-boolean-flag': true,
     }
+    provider = new MinimalistProvider(flags)
+  })
 
-    const provider = new MinimalistProvider(flags)
+  describe('boolean flags', () => {
+    it('resolves to default true value for an unrecognized bool flag', async () => {
+      const resolution = await provider.resolveBooleanEvaluation(
+        'unknown-flag',
+        true
+      )
+      verifyResolution(resolution, { expectedValue: true })
+    })
 
-    const resolution = await provider.resolveBooleanEvaluation(
-      'go-bananas',
-      false
-    )
-    verifyResolution(resolution, { expectedValue: true })
+    it('resolves to default false value for an unrecognized bool flag', async () => {
+      const resolution = await provider.resolveBooleanEvaluation(
+        'unknown-flag',
+        false
+      )
+      verifyResolution(resolution, { expectedValue: false })
+    })
+
+    it('resolves to correct value for a known bool flag', async () => {
+      const resolution = await provider.resolveBooleanEvaluation(
+        'a-boolean-flag',
+        false
+      )
+      verifyResolution(resolution, { expectedValue: true })
+    })
   })
 
   describe('string flags', () => {
-    let provider: MinimalistProvider
-    beforeEach(() => {
-      const flags = {
-        'a-string-flag': 'configured-value',
-        'a-boolean-flag': true,
-      }
-
-      provider = new MinimalistProvider(flags)
-    })
-
     it('resolves to the configured value for a known flag', async () => {
       const resolution = await provider.resolveStringEvaluation(
         'a-string-flag',
