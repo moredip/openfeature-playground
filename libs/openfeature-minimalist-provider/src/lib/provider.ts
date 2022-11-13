@@ -38,12 +38,20 @@ export class MinimalistProvider implements Provider {
     return bareResolution(flagValue)
   }
 
-  resolveStringEvaluation(
+  async resolveStringEvaluation(
     flagKey: string,
     defaultValue: string,
     context: EvaluationContext = {}
   ): Promise<ResolutionDetails<string>> {
-    throw new Error('Not supported')
+    if (!(flagKey in this._flagConfiguration)) {
+      return bareResolution(defaultValue)
+    }
+    const flagValue = this._flagConfiguration[flagKey]
+    if (typeof flagValue !== 'string') {
+      throw new TypeMismatchError()
+    }
+
+    return bareResolution(flagValue)
   }
 
   resolveNumberEvaluation(
