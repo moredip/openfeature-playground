@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Tabs, Tab, Typography, TextField, Button } from '@mui/material'
 
-import { useBooleanFeatureFlag } from '@openfeature-sandbox/openfeature-hooks'
+import { useBooleanFeatureFlag } from '@moredip/openfeature-hooks'
 
 interface Weather {
   temp: number

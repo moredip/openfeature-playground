@@ -1,3 +1,4 @@
+import { OpenFeatureProvider } from '@moredip/openfeature-hooks'
 import { MinimalistProvider } from '@openfeature-sandbox/openfeature-minimalist-provider'
 import { OpenFeature } from '@openfeature/js-sdk'
 import { StrictMode } from 'react'
@@ -8,12 +9,13 @@ import App from './app/app'
 const flags = {
   'include-conditions-in-weather-display': true,
 }
-
 OpenFeature.setProvider(new MinimalistProvider(flags))
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <StrictMode>
-    <App />
+    <OpenFeatureProvider>
+      <App />
+    </OpenFeatureProvider>
   </StrictMode>
 )

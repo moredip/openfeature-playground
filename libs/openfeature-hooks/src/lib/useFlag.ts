@@ -16,7 +16,7 @@ export function useBooleanFeatureFlag(flagName: string, defaultValue: boolean) {
     }
 
     getFlag()
-  }, [flagName, defaultValue])
+  }, [flagName, defaultValue, client])
 
   if (flagEvaluationDetails) {
     return flagEvaluationDetails.value

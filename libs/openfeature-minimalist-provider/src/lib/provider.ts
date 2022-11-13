@@ -18,6 +18,10 @@ export class MinimalistProvider implements Provider {
     this._flagConfiguration = flagConfiguration
   }
 
+  replaceConfiguration(flagConfiguration: FlagConfiguration) {
+    this._flagConfiguration = flagConfiguration
+  }
+
   async resolveBooleanEvaluation(
     flagKey: string,
     defaultValue: boolean,

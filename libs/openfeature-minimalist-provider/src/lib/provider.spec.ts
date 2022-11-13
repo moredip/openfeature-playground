@@ -1,11 +1,6 @@
 import { ResolutionDetails, TypeMismatchError } from '@openfeature/js-sdk'
-import MinimalistProvider from './provider'
+import { MinimalistProvider } from './provider'
 describe(MinimalistProvider, () => {
-  it('news up', () => {
-    const provider = new MinimalistProvider()
-    expect(provider).toBeDefined()
-  })
-
   it('resolves to default true value for an unrecognized bool flag', async () => {
     const provider = new MinimalistProvider()
     const resolution = await provider.resolveBooleanEvaluation(
@@ -48,6 +43,28 @@ describe(MinimalistProvider, () => {
     const evaluation = provider.resolveBooleanEvaluation('numeric-flag', false)
 
     expect(evaluation).rejects.toThrow(TypeMismatchError)
+  })
+
+  it('reflects changes in flag configuration', async () => {
+    const provider = new MinimalistProvider({
+      'some-flag': true,
+    })
+
+    const firstResolution = await provider.resolveBooleanEvaluation(
+      'some-flag',
+      false
+    )
+    verifyResolution(firstResolution, { expectedValue: true })
+
+    provider.replaceConfiguration({
+      'some-flag': false,
+    })
+
+    const secondResolution = await provider.resolveBooleanEvaluation(
+      'some-flag',
+      true
+    )
+    verifyResolution(secondResolution, { expectedValue: false })
   })
 })
 

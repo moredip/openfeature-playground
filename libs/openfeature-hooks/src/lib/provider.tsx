@@ -1,14 +1,18 @@
 import * as React from 'react'
-import { Client } from '@openfeature/js-sdk'
+import { Client, OpenFeature } from '@openfeature/js-sdk'
 
 type ProviderProps = {
-  client: Client
+  client?: Client
   children?: React.ReactNode
 }
 
 const Context = React.createContext<Client | undefined>(undefined)
 
 export const OpenFeatureProvider = ({ client, children }: ProviderProps) => {
+  if (!client) {
+    client = OpenFeature.getClient()
+  }
+
   return <Context.Provider value={client}>{children}</Context.Provider>
 }
 
