@@ -30,6 +30,7 @@
     "@nrwl/web": "14.8.3",
     "@nrwl/workspace": "14.8.3",
     "@testing-library/react": "^13.4.0",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "28.1.1",
     "@types/node": "16.11.7",
     "@types/react": "18.0.20",

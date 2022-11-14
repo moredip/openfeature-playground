@@ -1,30 +1,34 @@
 import { MinimalistProvider } from '@openfeature-sandbox/openfeature-minimalist-provider'
 import { OpenFeature } from '@openfeature/js-sdk'
-import { render } from '@testing-library/react'
-import { createSpy } from '../testing-support/spyComponent'
+import { renderHook } from '@testing-library/react-hooks'
+
 import { OpenFeatureProvider } from './provider'
+import { useStringFeatureFlag } from './useFlag'
 
 describe('useFlag', () => {
   describe('happy path', () => {
-    it('returns the configured value', () => {
+    it('eventually yields the configured value', async () => {
       const flags = {
-        'a-flag': true,
+        'some-flag': 'configured-value',
       }
       const provider = new MinimalistProvider(flags)
       OpenFeature.setProvider(provider)
 
-      const { SpyComponent, getFlagEvalHistory } = createSpy('a-flag', false)
-
-      expect(getFlagEvalHistory().length).toBe(0)
-
-      render(
-        <OpenFeatureProvider>
-          <SpyComponent />
-        </OpenFeatureProvider>
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          return useStringFeatureFlag('some-flag', 'default-value')
+        },
+        { wrapper: OpenFeatureProvider }
       )
 
-      expect(getFlagEvalHistory().length).toBe(1)
-      expect(getFlagEvalHistory()).toEqual([true])
+      // on first render the feature flag will always return the default
+      // value, because the flag lookup is an async operation, but a
+      // render is sync and the hook has to return *something*.
+      expect(result.current).toEqual('default-value')
+
+      await waitForNextUpdate()
+
+      expect(result.current).toEqual('configured-value')
     })
   })
 })
