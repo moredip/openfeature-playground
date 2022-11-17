@@ -1,0 +1,46 @@
+{
+  "name": "openfeature-chaos-provider",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/openfeature-chaos-provider/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/openfeature-chaos-provider",
+        "main": "libs/openfeature-chaos-provider/src/index.ts",
+        "tsConfig": "libs/openfeature-chaos-provider/tsconfig.lib.json",
+        "assets": ["libs/openfeature-chaos-provider/*.md"]
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node tools/scripts/publish.mjs openfeature-chaos-provider {args.ver} {args.tag}"
+      },
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "build"
+        }
+      ]
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/openfeature-chaos-provider/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/openfeature-chaos-provider"],
+      "options": {
+        "jestConfig": "libs/openfeature-chaos-provider/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

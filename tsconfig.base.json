@@ -15,9 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@moredip/openfeature-hooks": [
-        "libs/openfeature-hooks/src/index.ts"
+      "@moredip/openfeature-chaos-provider": [
+        "libs/openfeature-chaos-provider/src/index.ts"
       ],
+      "@moredip/openfeature-hooks": ["libs/openfeature-hooks/src/index.ts"],
       "@openfeature-sandbox/openfeature-minimalist-provider": [
         "libs/openfeature-minimalist-provider/src/index.ts"
       ]
