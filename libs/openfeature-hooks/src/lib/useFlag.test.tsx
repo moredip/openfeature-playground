@@ -3,7 +3,7 @@ import { OpenFeature } from '@openfeature/js-sdk'
 import { renderHook } from '@testing-library/react-hooks'
 
 import { OpenFeatureProvider } from './provider'
-import { useStringFeatureFlag } from './useFlag'
+import { useFeatureFlag } from './useFlag'
 
 describe('useFlag', () => {
   describe('happy path', () => {
@@ -16,7 +16,7 @@ describe('useFlag', () => {
 
       const { result, waitForNextUpdate } = renderHook(
         () => {
-          return useStringFeatureFlag('some-flag', 'default-value')
+          return useFeatureFlag<string>('some-flag', 'default-value')
         },
         { wrapper: OpenFeatureProvider }
       )
