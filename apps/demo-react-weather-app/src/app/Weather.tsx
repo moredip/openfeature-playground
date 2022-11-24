@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Tabs, Tab, Typography, TextField, Button } from '@mui/material'
 
-import { useBooleanFeatureFlag } from '@moredip/openfeature-hooks'
+import { useFeatureFlag } from '@moredip/openfeature-hooks'
 
 interface Weather {
   temp: number
@@ -52,7 +52,7 @@ type WeatherDetailsProps = {
   weather: Weather
 }
 function WeatherDetails({ weather }: WeatherDetailsProps) {
-  const includeConditions = useBooleanFeatureFlag(
+  const includeConditions = useFeatureFlag<boolean>(
     'include-conditions-in-weather-display',
     false
   )

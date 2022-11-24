@@ -13,19 +13,16 @@
         "outputPath": "dist/apps/demo-express-weather-app",
         "main": "apps/demo-express-weather-app/src/main.js",
         "tsConfig": "apps/demo-express-weather-app/tsconfig.app.json",
-        "assets": ["apps/demo-express-weather-app/src/assets"]
+        "assets": [
+          "apps/demo-express-weather-app/src/assets",
+          "apps/demo-express-weather-app/src/views"
+        ]
       },
       "configurations": {
         "production": {
           "optimization": true,
           "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/demo-express-weather-app/src/environments/environment.js",
-              "with": "apps/demo-express-weather-app/src/environments/environment.prod.js"
-            }
-          ]
+          "inspect": false
         }
       }
     },
