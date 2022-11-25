@@ -1,1 +1,18 @@
-<h1>Weather for {{location}}</h1>
+<main class="mdl-layout__content">
+  <div class="weather__container">
+    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+      <div class="mdl-tabs__tab-bar">
+        {{#each locations}}
+          <a href="{{this.slug}}" class="mdl-tabs__tab{{#if this.isCurrent}} is-active{{/if}}">{{this.label}}</a>
+        {{/each}}
+      </div>
+      <div class="mdl-tabs__panel is-active">
+        <div class="weather-details">
+          <span class="weather-details__temp mdl-typography--display-3">
+            {{location.temperatureF}}&deg;F
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

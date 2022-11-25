@@ -1,0 +1,20 @@
+body {
+  margin: 1rem;
+}
+.weather__container {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.weather-details {
+  margin: 2rem 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.weather-details__temp {
+  align-self: center;
+  font-size: 100px;
+  font-weight: 300;
+}
