@@ -1,7 +1,8 @@
 import * as path from 'path'
 import * as express from 'express'
 import 'hbs'
-import { allLocations, locationBySlug } from './locations';
+import { allLocations, getLocationInfo } from './lib/locations';
+import { getTemperature, getConditions } from './lib/conditions';
 
 
 const app = express()
@@ -16,9 +17,13 @@ app.get('/', (req, res) => {
 
 app.get('/:slug', (req, res) => {
   const slug = req.params['slug']
-  const location = locationBySlug(slug)
   const locations = allLocations(slug)
-  res.render( 'weather', {location,locations})
+
+  const location = getLocationInfo(slug)
+  const temperature = getTemperature(slug)
+  const conditions = getConditions(slug)
+
+  res.render( 'weather', {locations,location,temperature,conditions})
 })
 
 const port = process.env.port || 3333

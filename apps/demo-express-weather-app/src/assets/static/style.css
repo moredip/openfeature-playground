@@ -12,9 +12,9 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 .weather-details__temp {
-  align-self: center;
   font-size: 100px;
   font-weight: 300;
 }

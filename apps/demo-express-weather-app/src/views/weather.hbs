@@ -3,13 +3,16 @@
     <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
       <div class="mdl-tabs__tab-bar">
         {{#each locations}}
-          <a href="{{this.slug}}" class="mdl-tabs__tab{{#if this.isCurrent}} is-active{{/if}}">{{this.label}}</a>
+          <a href="{{this.id}}" class="mdl-tabs__tab{{#if this.isCurrent}} is-active{{/if}}">{{this.label}}</a>
         {{/each}}
       </div>
       <div class="mdl-tabs__panel is-active">
         <div class="weather-details">
           <span class="weather-details__temp mdl-typography--display-3">
-            {{location.temperatureF}}&deg;F
+            {{temperature}}&deg;F
+          </span>
+          <span class="mdl-typography--display-1">
+            {{conditions}}
           </span>
         </div>
       </div>
