@@ -1,9 +1,12 @@
 import * as path from 'path'
 import * as express from 'express'
-import 'hbs'
+import * as hbs from 'hbs'
 import { allLocations, getLocationInfo } from './lib/locations';
-import { getTemperature, getConditions } from './lib/conditions';
+import { getTemperature, getConditions, getUmbrellaPrediction } from './lib/conditions';
 
+hbs.registerHelper('available', function available(value) {
+  return value !== null && value !== undefined;
+});
 
 const app = express()
 app.set('view engine', 'hbs');
@@ -23,7 +26,10 @@ app.get('/:slug', (req, res) => {
   const temperature = getTemperature(slug)
   const conditions = getConditions(slug)
 
-  res.render( 'weather', {locations,location,temperature,conditions})
+  let umbrellaNeeded = null
+  umbrellaNeeded = getUmbrellaPrediction(slug)
+
+  res.render( 'weather', {locations,location,temperature,conditions,umbrellaNeeded})
 })
 
 const port = process.env.port || 3333

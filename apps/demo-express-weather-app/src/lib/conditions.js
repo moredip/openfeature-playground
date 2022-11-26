@@ -19,3 +19,14 @@ export function getConditions(locationId){
       return 'clear'
   }
 }
+
+export function getUmbrellaPrediction(locationId){
+  switch(locationId){
+    case 'san-francisco':
+      return false;
+    case 'seattle':
+      return true;
+    case 'boston':
+      return false;
+  }
+}
