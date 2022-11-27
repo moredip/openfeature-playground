@@ -1,5 +1,5 @@
 import { OpenFeatureProvider } from '@moredip/openfeature-hooks'
-import { MinimalistProvider } from '@openfeature-sandbox/openfeature-minimalist-provider'
+import { MinimalistProvider } from '@moredip/openfeature-minimalist-provider'
 import { OpenFeature } from '@openfeature/js-sdk'
 import { StrictMode } from 'react'
 import * as ReactDOM from 'react-dom/client'

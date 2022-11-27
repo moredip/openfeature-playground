@@ -1,1 +1,1 @@
-export * from './lib/openfeature-chaos-provider'
+export * from './lib/provider'

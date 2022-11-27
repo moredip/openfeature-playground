@@ -1,13 +1,10 @@
 import {
   ErrorCode,
   EvaluationContext,
-  FlagValue,
-  Hook,
   JsonValue,
   Logger,
   Provider,
   ResolutionDetails,
-  TypeMismatchError,
 } from '@openfeature/js-sdk'
 
 export class ChaosProvider implements Provider {
@@ -95,54 +92,6 @@ export class ChaosProvider implements Provider {
     }
     return null
   }
-
-  // async resolveBooleanEvaluation(
-  //   flagKey: string,
-  //   defaultValue: boolean,
-  //   context: EvaluationContext = {}
-  // ): Promise<ResolutionDetails<boolean>> {
-  //   if (!(flagKey in this._flagConfiguration)) {
-  //     return bareResolution(defaultValue)
-  //   }
-  //   const flagValue = this._flagConfiguration[flagKey]
-  //   if (typeof flagValue !== 'boolean') {
-  //     throw new TypeMismatchError()
-  //   }
-
-  //   return bareResolution(flagValue)
-  // }
-
-  // async resolveStringEvaluation(
-  //   flagKey: string,
-  //   defaultValue: string,
-  //   context: EvaluationContext = {}
-  // ): Promise<ResolutionDetails<string>> {
-  //   if (!(flagKey in this._flagConfiguration)) {
-  //     return bareResolution(defaultValue)
-  //   }
-  //   const flagValue = this._flagConfiguration[flagKey]
-  //   if (typeof flagValue !== 'string') {
-  //     throw new TypeMismatchError()
-  //   }
-
-  //   return bareResolution(flagValue)
-  // }
-
-  // resolveNumberEvaluation(
-  //   flagKey: string,
-  //   defaultValue: number,
-  //   context: EvaluationContext = {}
-  // ): Promise<ResolutionDetails<number>> {
-  //   throw new Error('Not supported')
-  // }
-
-  // resolveObjectEvaluation<T extends JsonValue>(
-  //   flagKey: string,
-  //   defaultValue: T,
-  //   context: EvaluationContext = {}
-  // ): Promise<ResolutionDetails<T>> {
-  //   throw new Error('Not supported')
-  // }
 }
 
 function simulateError<T>(
