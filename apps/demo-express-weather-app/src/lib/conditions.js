@@ -1,3 +1,4 @@
+
 export function getTemperature(locationId){
   switch(locationId){
     case 'san-francisco':
@@ -20,7 +21,7 @@ export function getConditions(locationId){
   }
 }
 
-export function getUmbrellaPrediction(locationId){
+export async function getUmbrellaPrediction(locationId){
   switch(locationId){
     case 'san-francisco':
       return false;
