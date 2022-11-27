@@ -19,7 +19,7 @@
         "libs/openfeature-chaos-provider/src/index.ts"
       ],
       "@moredip/openfeature-hooks": ["libs/openfeature-hooks/src/index.ts"],
-      "@openfeature-sandbox/openfeature-minimalist-provider": [
+      "@moredip/openfeature-minimalist-provider": [
         "libs/openfeature-minimalist-provider/src/index.ts"
       ]
     }

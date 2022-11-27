@@ -1,8 +1,9 @@
 {
-  "name": "@openfeature-sandbox/openfeature-minimalist-provider",
-  "version": "0.0.1",
+  "name": "@moredip/openfeature-minimalist-provider",
+  "version": "0.0.2",
   "type": "commonjs",
   "license": "MIT",
+  "private": false,
   "dependencies": {
   }
 }

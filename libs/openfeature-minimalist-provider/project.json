@@ -28,6 +28,17 @@
         "jestConfig": "libs/openfeature-minimalist-provider/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "publish": {
+      "dependsOn": ["build","test"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "node tools/scripts/publish-if-newer.mjs openfeature-minimalist-provider"
+          }
+        ]
+      }
     }
   },
   "tags": []
