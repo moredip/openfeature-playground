@@ -1,5 +1,5 @@
 import { ChaosProvider } from './provider'
-import { MinimalistProvider } from '@openfeature-sandbox/openfeature-minimalist-provider'
+import { MinimalistProvider } from '@moredip/openfeature-minimalist-provider'
 import { ErrorCode, Logger } from '@openfeature/js-sdk'
 
 describe(ChaosProvider, () => {

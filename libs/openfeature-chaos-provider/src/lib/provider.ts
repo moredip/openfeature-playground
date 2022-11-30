@@ -23,6 +23,10 @@ export class ChaosProvider implements Provider {
     this._errorCodeToSimulate = errorCode
   }
 
+  simulateProviderNotReady() {
+    this.simulateError(ErrorCode.PROVIDER_NOT_READY)
+  }
+
   resetChaos() {
     this._errorCodeToSimulate = null
   }

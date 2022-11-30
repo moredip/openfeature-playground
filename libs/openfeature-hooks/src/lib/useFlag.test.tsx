@@ -1,4 +1,5 @@
-import { MinimalistProvider } from '@openfeature-sandbox/openfeature-minimalist-provider'
+import { ChaosProvider } from '@moredip/openfeature-chaos-provider'
+import { MinimalistProvider } from '@moredip/openfeature-minimalist-provider'
 import { OpenFeature } from '@openfeature/js-sdk'
 import { renderHook } from '@testing-library/react-hooks'
 
@@ -26,6 +27,35 @@ describe('useFlag', () => {
       // render is sync and the hook has to return *something*.
       expect(result.current).toEqual('default-value')
 
+      await waitForNextUpdate()
+
+      expect(result.current).toEqual('configured-value')
+    })
+  })
+
+  describe('sad paths', () => {
+    it.skip('provider initially not ready', async () => {
+      const flags = {
+        'some-flag': 'configured-value',
+      }
+      const chaosProvider = new ChaosProvider(new MinimalistProvider(flags))
+      chaosProvider.simulateProviderNotReady()
+      OpenFeature.setProvider(chaosProvider)
+
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          return useFeatureFlag<string>('some-flag', 'default-value')
+        },
+        { wrapper: OpenFeatureProvider }
+      )
+
+      expect(result.current).toEqual('default-value') // default value on initial render
+
+      await waitForNextUpdate()
+
+      expect(result.current).toEqual('default-value') // default value because provider is not ready
+
+      chaosProvider.resetChaos()
       await waitForNextUpdate()
 
       expect(result.current).toEqual('configured-value')
