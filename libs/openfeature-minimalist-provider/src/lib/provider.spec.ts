@@ -2,6 +2,7 @@ import {
   ResolutionDetails,
   StandardResolutionReasons,
   TypeMismatchError,
+  FlagNotFoundError,
 } from '@openfeature/js-sdk'
 import { MinimalistProvider } from './provider'
 describe(MinimalistProvider, () => {
@@ -15,31 +16,17 @@ describe(MinimalistProvider, () => {
   })
 
   describe('boolean flags', () => {
-    it('resolves to default true value for an unrecognized bool flag', async () => {
-      const resolution = await provider.resolveBooleanEvaluation(
-        'unknown-flag',
-        true
-      )
-      verifyResolution(resolution, { expectedValue: true })
-      expect(resolution.reason).toBe(StandardResolutionReasons.DEFAULT)
-    })
-
-    it('resolves to default false value for an unrecognized bool flag', async () => {
-      const resolution = await provider.resolveBooleanEvaluation(
-        'unknown-flag',
-        false
-      )
-      verifyResolution(resolution, { expectedValue: false })
-      expect(resolution.reason).toBe(StandardResolutionReasons.DEFAULT)
-    })
-
-    it('resolves to correct value for a known bool flag', async () => {
+    it('resolves to the configured value for a known flag', async () => {
       const resolution = await provider.resolveBooleanEvaluation(
         'a-boolean-flag',
         false
       )
       verifyResolution(resolution, { expectedValue: true })
-      expect(resolution.reason).toBeUndefined()
+    })
+
+    it('throws when asked for an unrecognized flag', async () => {
+      const evaluation = provider.resolveBooleanEvaluation('unknown-flag', true)
+      expect(evaluation).rejects.toThrow(FlagNotFoundError)
     })
   })
 
@@ -50,16 +37,14 @@ describe(MinimalistProvider, () => {
         'default-value'
       )
       verifyResolution(resolution, { expectedValue: 'configured-value' })
-      expect(resolution.reason).toBeUndefined()
     })
 
-    it('resolves to the default value for an unknown flag', async () => {
-      const resolution = await provider.resolveStringEvaluation(
+    it('throws when asked for an unrecognized flag', async () => {
+      const evaluation = provider.resolveStringEvaluation(
         'unknown-string-flag',
         'default-value'
       )
-      verifyResolution(resolution, { expectedValue: 'default-value' })
-      expect(resolution.reason).toBe(StandardResolutionReasons.DEFAULT)
+      expect(evaluation).rejects.toThrow(FlagNotFoundError)
     })
 
     it('throws a TypeMismatchError when asked to resolve a non-string flag', async () => {
@@ -116,5 +101,6 @@ function verifyResolution<U>(
   { expectedValue }: VerifyResolutionParams<U>
 ) {
   expect(resolution.value).toBe(expectedValue)
+  expect(resolution.reason).toBe(StandardResolutionReasons.DEFAULT)
   expect(resolution.errorCode).toBeUndefined()
 }

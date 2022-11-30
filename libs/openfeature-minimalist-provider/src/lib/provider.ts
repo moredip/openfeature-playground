@@ -5,6 +5,7 @@ import {
   ResolutionDetails,
   StandardResolutionReasons,
   TypeMismatchError,
+  FlagNotFoundError
 } from '@openfeature/js-sdk'
 import { FlagConfiguration } from './flagConfiguration'
 import { bareResolution } from './resolutionDetail'
@@ -29,14 +30,14 @@ export class MinimalistProvider implements Provider {
     context: EvaluationContext = {}
   ): Promise<ResolutionDetails<boolean>> {
     if (!(flagKey in this._flagConfiguration)) {
-      return bareResolution(defaultValue, StandardResolutionReasons.DEFAULT)
+      throw new FlagNotFoundError()
     }
     const flagValue = this._flagConfiguration[flagKey]
     if (typeof flagValue !== 'boolean') {
       throw new TypeMismatchError()
     }
 
-    return bareResolution(flagValue)
+    return bareResolution(flagValue, StandardResolutionReasons.DEFAULT)
   }
 
   async resolveStringEvaluation(
@@ -45,14 +46,14 @@ export class MinimalistProvider implements Provider {
     context: EvaluationContext = {}
   ): Promise<ResolutionDetails<string>> {
     if (!(flagKey in this._flagConfiguration)) {
-      return bareResolution(defaultValue, StandardResolutionReasons.DEFAULT)
+      throw new FlagNotFoundError()
     }
     const flagValue = this._flagConfiguration[flagKey]
     if (typeof flagValue !== 'string') {
       throw new TypeMismatchError()
     }
 
-    return bareResolution(flagValue)
+    return bareResolution(flagValue, StandardResolutionReasons.DEFAULT)
   }
 
   resolveNumberEvaluation(
