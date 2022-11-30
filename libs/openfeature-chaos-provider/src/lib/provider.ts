@@ -5,30 +5,48 @@ import {
   Logger,
   Provider,
   ResolutionDetails,
+  ProviderEvents,
 } from '@openfeature/js-sdk'
+import { EventEmitter } from 'events'
 
-export class ChaosProvider implements Provider {
+export class ChaosProvider implements Provider, EventProvider {
   readonly metadata = {
     name: 'Chaos Provider',
   } as const
+
+  readonly events = new EventEmitter()
+  readonly ready = true
+
   private _wrappedProvider: Provider
 
   private _errorCodeToSimulate: ErrorCode | null = null
 
   constructor(wrappedProvider: Provider) {
     this._wrappedProvider = wrappedProvider
+    // TODO: forwarding events from wrapped provider
   }
 
   simulateError(errorCode: ErrorCode) {
     this._errorCodeToSimulate = errorCode
   }
 
+  clearSimluatedError() {
+    this._errorCodeToSimulate = null
+  }
+
   simulateProviderNotReady() {
+    this.ready = false
     this.simulateError(ErrorCode.PROVIDER_NOT_READY)
   }
 
+  simulateProviderBecomingReady() {
+    this.ready = true
+    this.clearSimluatedError()
+    this.events.emit(ProviderEvents.Ready)
+  }
+
   resetChaos() {
-    this._errorCodeToSimulate = null
+    this.clearSimluatedError()
   }
 
   async resolveBooleanEvaluation(
@@ -92,13 +110,13 @@ export class ChaosProvider implements Provider {
     defaultValue: T
   ): ResolutionDetails<T> | null {
     if (this._errorCodeToSimulate) {
-      return simulateError(defaultValue, this._errorCodeToSimulate)
+      return simulatedError(defaultValue, this._errorCodeToSimulate)
     }
     return null
   }
 }
 
-function simulateError<T>(
+function simulatedError<T>(
   value: T,
   errorCode: ErrorCode
 ): ResolutionDetails<T> {

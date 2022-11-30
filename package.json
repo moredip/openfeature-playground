@@ -12,7 +12,7 @@
     "@emotion/react": "11.10.4",
     "@emotion/styled": "11.10.4",
     "@mui/material": "^5.10.8",
-    "@openfeature/js-sdk": "^0.5.0",
+    "@openfeature/js-sdk": "1.1.0-experimental-9d746fab8c970534ef33d8da3fa80a5e44601b1e",
     "core-js": "^3.6.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",

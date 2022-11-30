@@ -47,7 +47,7 @@ describe(ChaosProvider, () => {
     expect(result.value).toBe('the default')
     expect(result.errorCode).toBe(ErrorCode.PROVIDER_NOT_READY)
 
-    chaosProvider.resetChaos()
+    chaosProvider.clearSimluatedError()
     result = await chaosProvider.resolveStringEvaluation(
       'some-flag',
       'the default',

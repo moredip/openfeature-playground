@@ -34,7 +34,7 @@ describe('useFlag', () => {
   })
 
   describe('sad paths', () => {
-    it.skip('provider initially not ready', async () => {
+    it('provider initially not ready', async () => {
       const flags = {
         'some-flag': 'configured-value',
       }
@@ -55,7 +55,7 @@ describe('useFlag', () => {
 
       expect(result.current).toEqual('default-value') // default value because provider is not ready
 
-      chaosProvider.resetChaos()
+      chaosProvider.simulateProviderBecomingReady()
       await waitForNextUpdate()
 
       expect(result.current).toEqual('configured-value')

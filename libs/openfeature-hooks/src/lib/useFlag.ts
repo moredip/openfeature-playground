@@ -3,8 +3,9 @@ import {
   EvaluationDetails,
   FlagValue,
   ResolutionDetails,
+  ProviderEvents,
 } from '@openfeature/js-sdk'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useOpenFeatureClient } from './provider'
 
 export function useFeatureFlag<T extends FlagValue>(
@@ -16,9 +17,21 @@ export function useFeatureFlag<T extends FlagValue>(
 
   const client = useOpenFeatureClient()
 
-  useEffect(() => {
+  const refreshFlagState = useCallback(() => {
     getFlag(client, flagKey, defaultValue, setFlagEvaluationDetails)
-  }, [flagKey, defaultValue, client])
+  }, [client, flagKey, defaultValue, setFlagEvaluationDetails])
+
+  useEffect(() => {
+    client.addHandler(ProviderEvents.Ready, refreshFlagState)
+    // TODO: test me
+    client.addHandler(ProviderEvents.ConfigurationChanged, refreshFlagState)
+
+    return () => {
+      // TODO: remove handler
+    }
+  }, [client, refreshFlagState])
+
+  useEffect(refreshFlagState, [client, flagKey, defaultValue])
 
   if (flagEvaluationDetails) {
     return flagEvaluationDetails.value
