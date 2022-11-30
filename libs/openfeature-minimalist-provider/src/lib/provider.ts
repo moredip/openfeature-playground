@@ -3,6 +3,7 @@ import {
   JsonValue,
   Provider,
   ResolutionDetails,
+  StandardResolutionReasons,
   TypeMismatchError,
 } from '@openfeature/js-sdk'
 import { FlagConfiguration } from './flagConfiguration'
@@ -28,7 +29,7 @@ export class MinimalistProvider implements Provider {
     context: EvaluationContext = {}
   ): Promise<ResolutionDetails<boolean>> {
     if (!(flagKey in this._flagConfiguration)) {
-      return bareResolution(defaultValue)
+      return bareResolution(defaultValue, StandardResolutionReasons.DEFAULT)
     }
     const flagValue = this._flagConfiguration[flagKey]
     if (typeof flagValue !== 'boolean') {
@@ -44,7 +45,7 @@ export class MinimalistProvider implements Provider {
     context: EvaluationContext = {}
   ): Promise<ResolutionDetails<string>> {
     if (!(flagKey in this._flagConfiguration)) {
-      return bareResolution(defaultValue)
+      return bareResolution(defaultValue, StandardResolutionReasons.DEFAULT)
     }
     const flagValue = this._flagConfiguration[flagKey]
     if (typeof flagValue !== 'string') {

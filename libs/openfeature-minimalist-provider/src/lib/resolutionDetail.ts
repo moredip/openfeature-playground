@@ -1,7 +1,11 @@
-import { ResolutionDetails } from '@openfeature/js-sdk'
+import { ResolutionDetails, ResolutionReason } from '@openfeature/js-sdk'
 
-export function bareResolution<U>(value: U): ResolutionDetails<U> {
+export function bareResolution<U>(
+  value: U,
+  reason?: ResolutionReason
+): ResolutionDetails<U> {
   return {
-    value: value,
+    value,
+    reason,
   }
 }

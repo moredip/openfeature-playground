@@ -1,4 +1,8 @@
-import { ResolutionDetails, TypeMismatchError } from '@openfeature/js-sdk'
+import {
+  ResolutionDetails,
+  StandardResolutionReasons,
+  TypeMismatchError,
+} from '@openfeature/js-sdk'
 import { MinimalistProvider } from './provider'
 describe(MinimalistProvider, () => {
   let provider: MinimalistProvider
@@ -17,6 +21,7 @@ describe(MinimalistProvider, () => {
         true
       )
       verifyResolution(resolution, { expectedValue: true })
+      expect(resolution.reason).toBe(StandardResolutionReasons.DEFAULT)
     })
 
     it('resolves to default false value for an unrecognized bool flag', async () => {
@@ -25,6 +30,7 @@ describe(MinimalistProvider, () => {
         false
       )
       verifyResolution(resolution, { expectedValue: false })
+      expect(resolution.reason).toBe(StandardResolutionReasons.DEFAULT)
     })
 
     it('resolves to correct value for a known bool flag', async () => {
@@ -33,6 +39,7 @@ describe(MinimalistProvider, () => {
         false
       )
       verifyResolution(resolution, { expectedValue: true })
+      expect(resolution.reason).toBeUndefined()
     })
   })
 
@@ -43,6 +50,7 @@ describe(MinimalistProvider, () => {
         'default-value'
       )
       verifyResolution(resolution, { expectedValue: 'configured-value' })
+      expect(resolution.reason).toBeUndefined()
     })
 
     it('resolves to the default value for an unknown flag', async () => {
@@ -51,6 +59,7 @@ describe(MinimalistProvider, () => {
         'default-value'
       )
       verifyResolution(resolution, { expectedValue: 'default-value' })
+      expect(resolution.reason).toBe(StandardResolutionReasons.DEFAULT)
     })
 
     it('throws a TypeMismatchError when asked to resolve a non-string flag', async () => {
@@ -107,4 +116,5 @@ function verifyResolution<U>(
   { expectedValue }: VerifyResolutionParams<U>
 ) {
   expect(resolution.value).toBe(expectedValue)
+  expect(resolution.errorCode).toBeUndefined()
 }
