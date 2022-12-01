@@ -23,7 +23,6 @@ export function useFeatureFlag<T extends FlagValue>(
 
   useEffect(() => {
     client.addHandler(ProviderEvents.Ready, refreshFlagState)
-    // TODO: test me
     client.addHandler(ProviderEvents.ConfigurationChanged, refreshFlagState)
 
     return () => {

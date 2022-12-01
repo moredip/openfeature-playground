@@ -6,6 +6,7 @@ import {
   Provider,
   ResolutionDetails,
   ProviderEvents,
+  EventProvider,
 } from '@openfeature/js-sdk'
 import { EventEmitter } from 'events'
 
@@ -15,7 +16,11 @@ export class ChaosProvider implements Provider, EventProvider {
   } as const
 
   readonly events = new EventEmitter()
-  readonly ready = true
+
+  private _ready = true
+  get ready() {
+    return this._ready
+  }
 
   private _wrappedProvider: Provider
 
@@ -35,12 +40,12 @@ export class ChaosProvider implements Provider, EventProvider {
   }
 
   simulateProviderNotReady() {
-    this.ready = false
+    this._ready = false
     this.simulateError(ErrorCode.PROVIDER_NOT_READY)
   }
 
   simulateProviderBecomingReady() {
-    this.ready = true
+    this._ready = true
     this.clearSimluatedError()
     this.events.emit(ProviderEvents.Ready)
   }

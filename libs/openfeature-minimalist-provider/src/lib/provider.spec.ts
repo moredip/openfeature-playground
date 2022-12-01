@@ -3,6 +3,7 @@ import {
   StandardResolutionReasons,
   TypeMismatchError,
   FlagNotFoundError,
+  ProviderEvents,
 } from '@openfeature/js-sdk'
 import { MinimalistProvider } from './provider'
 describe(MinimalistProvider, () => {
@@ -89,6 +90,24 @@ describe(MinimalistProvider, () => {
       'blah'
     )
     verifyResolution(secondResolution, { expectedValue: 'updated-value' })
+  })
+
+  it('emits a change event when flag configuration changes', async () => {
+    const provider = new MinimalistProvider({
+      'some-flag': 'initial-value',
+    })
+
+    const spyListener = jest.fn()
+    provider.events.addListener(
+      ProviderEvents.ConfigurationChanged,
+      spyListener
+    )
+
+    provider.replaceConfiguration({
+      blah: 'blah',
+    })
+
+    expect(spyListener).toHaveBeenCalledTimes(1)
   })
 })
 

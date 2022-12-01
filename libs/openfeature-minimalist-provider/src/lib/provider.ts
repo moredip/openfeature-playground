@@ -1,19 +1,30 @@
 import {
-  EvaluationContext,
   JsonValue,
   Provider,
+  EventProvider,
+  ProviderEvents,
   ResolutionDetails,
   StandardResolutionReasons,
   TypeMismatchError,
-  FlagNotFoundError
+  FlagNotFoundError,
+  EvaluationContext,
 } from '@openfeature/js-sdk'
+import { EventEmitter } from 'events'
+
 import { FlagConfiguration } from './flagConfiguration'
 import { bareResolution } from './resolutionDetail'
 
-export class MinimalistProvider implements Provider {
+export class MinimalistProvider implements Provider, EventProvider {
   readonly metadata = {
     name: 'Minimalist Provider',
   } as const
+  readonly events = new EventEmitter()
+
+  private _ready = true
+  get ready() {
+    return this._ready
+  }
+
   private _flagConfiguration: FlagConfiguration
 
   constructor(flagConfiguration: FlagConfiguration = {}) {
@@ -22,6 +33,7 @@ export class MinimalistProvider implements Provider {
 
   replaceConfiguration(flagConfiguration: FlagConfiguration) {
     this._flagConfiguration = flagConfiguration
+    this.events.emit(ProviderEvents.ConfigurationChanged)
   }
 
   async resolveBooleanEvaluation(
