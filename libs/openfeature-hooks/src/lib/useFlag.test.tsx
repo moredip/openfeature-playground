@@ -24,11 +24,23 @@ describe('useFlag', () => {
     // on first render the feature flag will always return the default
     // value, because the flag lookup is an async operation, but a
     // render is sync and the hook has to return *something*.
-    expect(result.current).toEqual('default-value')
+    expect(result.current).toMatchObject({
+      value: 'default-value',
+      isAuthoritative: false,
+      isEvaluating: true,
+      isDefault: true,
+      isError: false,
+    })
 
     await waitForNextUpdate()
 
-    expect(result.current).toEqual('configured-value')
+    expect(result.current).toMatchObject({
+      value: 'configured-value',
+      isAuthoritative: true,
+      isEvaluating: false,
+      isDefault: false,
+      isError: false,
+    })
   })
 
   it('updates flag value as provider configuration changes', async () => {
@@ -46,14 +58,26 @@ describe('useFlag', () => {
 
     await waitForNextUpdate()
 
-    expect(result.current).toEqual('initial-value')
+    expect(result.current).toMatchObject({
+      value: 'initial-value',
+      isAuthoritative: true,
+      isEvaluating: false,
+      isDefault: false,
+      isError: false,
+    })
 
     provider.replaceConfiguration({
       'some-flag': 'updated-value',
     })
 
     await waitForNextUpdate()
-    expect(result.current).toEqual('updated-value')
+    expect(result.current).toMatchObject({
+      value: 'updated-value',
+      isAuthoritative: true,
+      isEvaluating: false,
+      isDefault: false,
+      isError: false,
+    })
   })
 
   it('updates flag value from default to actual value a provider becomes ready', async () => {
@@ -71,15 +95,36 @@ describe('useFlag', () => {
       { wrapper: OpenFeatureProvider }
     )
 
-    expect(result.current).toEqual('default-value') // default value on initial render
+    // initial result before provider has had a chance to evalute the flag
+    expect(result.current).toMatchObject({
+      value: 'default-value',
+      isAuthoritative: false,
+      isDefault: true,
+      isEvaluating: true,
+      isError: false,
+    })
 
     await waitForNextUpdate()
 
-    expect(result.current).toEqual('default-value') // default value because provider is not ready
+    // flag result changes to indicate that provider that it is not ready
+    expect(result.current).toMatchObject({
+      value: 'default-value',
+      isAuthoritative: false,
+      isDefault: true,
+      isEvaluating: false,
+      isError: true,
+    })
 
     chaosProvider.simulateProviderBecomingReady()
     await waitForNextUpdate()
 
-    expect(result.current).toEqual('configured-value')
+    // updated flag result now that provider is ready
+    expect(result.current).toMatchObject({
+      value: 'configured-value',
+      isAuthoritative: true,
+      isDefault: false,
+      isEvaluating: false,
+      isError: false,
+    })
   })
 })

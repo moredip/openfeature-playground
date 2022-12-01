@@ -52,10 +52,11 @@ type WeatherDetailsProps = {
   weather: Weather
 }
 function WeatherDetails({ weather }: WeatherDetailsProps) {
-  const includeConditions = useFeatureFlag<boolean>(
+  const includeConditionsFlag = useFeatureFlag<boolean>(
     'include-conditions-in-weather-display',
     false
   )
+
   return (
     <Box
       sx={{
@@ -68,7 +69,7 @@ function WeatherDetails({ weather }: WeatherDetailsProps) {
       <Typography alignSelf="center" variant="h1" component="h3">
         {weather.temp}&deg;F
       </Typography>
-      {includeConditions && (
+      {includeConditionsFlag.value && (
         <Typography alignSelf="center" variant="h4" component="h3">
           {weather.conditions}
         </Typography>

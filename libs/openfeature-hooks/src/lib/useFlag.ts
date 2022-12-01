@@ -2,41 +2,44 @@ import {
   Client,
   EvaluationDetails,
   FlagValue,
-  ResolutionDetails,
   ProviderEvents,
 } from '@openfeature/js-sdk'
 import { useCallback, useEffect, useState } from 'react'
+import { FlagResult, fromEvaluationDetails } from './flagResult'
 import { useOpenFeatureClient } from './provider'
 
 export function useFeatureFlag<T extends FlagValue>(
   flagKey: string,
   defaultValue: T
-): T {
+): FlagResult<T> {
   const [flagEvaluationDetails, setFlagEvaluationDetails] =
-    useState<ResolutionDetails<T> | null>(null)
+    useState<EvaluationDetails<T> | null>(null)
 
   const client = useOpenFeatureClient()
 
-  const refreshFlagState = useCallback(() => {
+  const refreshFlagState = () => {
     getFlag(client, flagKey, defaultValue, setFlagEvaluationDetails)
-  }, [client, flagKey, defaultValue, setFlagEvaluationDetails])
+  }
+
+  const handlerCallback = useCallback(refreshFlagState, [
+    client,
+    flagKey,
+    defaultValue,
+    setFlagEvaluationDetails,
+  ])
 
   useEffect(() => {
-    client.addHandler(ProviderEvents.Ready, refreshFlagState)
-    client.addHandler(ProviderEvents.ConfigurationChanged, refreshFlagState)
+    client.addHandler(ProviderEvents.Ready, handlerCallback)
+    client.addHandler(ProviderEvents.ConfigurationChanged, handlerCallback)
 
     return () => {
       // TODO: remove handler
     }
-  }, [client, refreshFlagState])
+  }, [client, handlerCallback])
 
   useEffect(refreshFlagState, [client, flagKey, defaultValue])
 
-  if (flagEvaluationDetails) {
-    return flagEvaluationDetails.value
-  } else {
-    return defaultValue
-  }
+  return fromEvaluationDetails(defaultValue, flagEvaluationDetails)
 }
 
 async function getFlag<T extends FlagValue>(
