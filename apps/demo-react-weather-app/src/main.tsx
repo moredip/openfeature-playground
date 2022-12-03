@@ -6,10 +6,10 @@ import * as ReactDOM from 'react-dom/client'
 
 import App from './app/app'
 
-const flags = {
+const provider = new MinimalistProvider({
   'include-conditions-in-weather-display': true,
-}
-OpenFeature.setProvider(new MinimalistProvider(flags))
+})
+OpenFeature.setProvider(provider)
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
