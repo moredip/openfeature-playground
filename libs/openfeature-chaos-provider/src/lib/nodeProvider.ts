@@ -7,7 +7,7 @@ import {
   ResolutionDetails,
 } from '@openfeature/js-sdk'
 
-export class ChaosProvider implements Provider {
+export class ChaosNodeProvider implements Provider {
   readonly metadata = {
     name: 'Chaos Provider',
   } as const

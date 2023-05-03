@@ -1,13 +1,13 @@
-import { ChaosProvider } from './provider'
-import { MinimalistProvider } from '@moredip/openfeature-minimalist-provider'
-import { ErrorCode, Logger } from '@openfeature/js-sdk'
+import { ChaosWebProvider } from './webProvider'
+import { MinimalistProvider } from '@moredip/openfeature-minimalist-provider/web'
+import { ErrorCode, Logger } from '@openfeature/web-sdk'
 
-describe(ChaosProvider, () => {
+describe(ChaosWebProvider, () => {
   it('calls through to the wrapped provider', async () => {
     const wrappedProvider = new MinimalistProvider({
       'some-flag': 'the-wrapped-value',
     })
-    const chaosProvider = new ChaosProvider(wrappedProvider)
+    const chaosProvider = new ChaosWebProvider(wrappedProvider)
 
     const result = await chaosProvider.resolveStringEvaluation(
       'some-flag',
@@ -22,7 +22,7 @@ describe(ChaosProvider, () => {
     const wrappedProvider = new MinimalistProvider({
       'some-flag': 'the-wrapped-value',
     })
-    const chaosProvider = new ChaosProvider(wrappedProvider)
+    const chaosProvider = new ChaosWebProvider(wrappedProvider)
 
     chaosProvider.simulateError(ErrorCode.TYPE_MISMATCH)
 

@@ -21,6 +21,9 @@
       "@moredip/openfeature-hooks": ["libs/openfeature-hooks/src/index.ts"],
       "@moredip/openfeature-minimalist-provider": [
         "libs/openfeature-minimalist-provider/src/index.ts"
+      ],
+      "@moredip/openfeature-minimalist-provider/web": [
+        "libs/openfeature-minimalist-provider/src/lib/web/index.ts"
       ]
     }
   },

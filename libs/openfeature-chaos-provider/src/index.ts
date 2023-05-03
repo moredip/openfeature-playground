@@ -1,1 +1,2 @@
-export * from './lib/provider'
+export * from './lib/nodeProvider'
+export * from './lib/webProvider'
