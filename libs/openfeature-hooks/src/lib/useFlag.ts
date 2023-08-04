@@ -2,48 +2,63 @@ import {
   Client,
   EvaluationDetails,
   FlagValue,
-  ResolutionDetails,
-} from '@openfeature/js-sdk'
-import { useEffect, useState } from 'react'
+  ProviderEvents,
+} from '@openfeature/web-sdk'
 import { useOpenFeatureClient } from './provider'
+import { useEffect, useReducer } from 'react'
+import { FlagResult, fromEvaluationDetails } from './flagResult'
 
 export function useFeatureFlag<T extends FlagValue>(
   flagKey: string,
   defaultValue: T
-): T {
-  const [flagEvaluationDetails, setFlagEvaluationDetails] =
-    useState<ResolutionDetails<T> | null>(null)
+): FlagResult<T> {
+  const [, forceUpdate] = useReducer((x) => x + 1, 0) // courtesy https://legacy.reactjs.org/docs/hooks-faq.html#is-there-something-like-forceupdate
 
   const client = useOpenFeatureClient()
 
   useEffect(() => {
-    getFlag(client, flagKey, defaultValue, setFlagEvaluationDetails)
-  }, [flagKey, defaultValue, client])
+    // whenever any events happen, re-run our hook just in case the feature flag result has changed
+    client.addHandler(ProviderEvents.ConfigurationChanged, forceUpdate)
+    client.addHandler(ProviderEvents.Ready, forceUpdate)
+    client.addHandler(ProviderEvents.Error, forceUpdate)
+    client.addHandler(ProviderEvents.Stale, forceUpdate)
+    return () => {
+      client.removeHandler(ProviderEvents.ConfigurationChanged, forceUpdate)
+      client.removeHandler(ProviderEvents.Ready, forceUpdate)
+      client.removeHandler(ProviderEvents.Error, forceUpdate)
+      client.removeHandler(ProviderEvents.Stale, forceUpdate)
+    }
+  }, [client])
 
-  if (flagEvaluationDetails) {
-    return flagEvaluationDetails.value
-  } else {
-    return defaultValue
-  }
+  const evaluation = getFlag(client, flagKey, defaultValue)
+
+  return fromEvaluationDetails(evaluation)
 }
 
-async function getFlag<T extends FlagValue>(
+function getFlag<T extends FlagValue>(
   client: Client,
   flagKey: string,
-  defaultValue: T,
-  setFlagDetails: (details: EvaluationDetails<T>) => void
-): Promise<void> {
+  defaultValue: T
+): EvaluationDetails<T> {
   if (typeof defaultValue === 'boolean') {
-    const flagDetails = await client.getBooleanDetails(flagKey, defaultValue)
-    setFlagDetails(flagDetails as EvaluationDetails<T>)
+    return client.getBooleanDetails(
+      flagKey,
+      defaultValue
+    ) as EvaluationDetails<T>
   } else if (typeof defaultValue === 'string') {
-    const flagDetails = await client.getStringDetails(flagKey, defaultValue)
-    setFlagDetails(flagDetails as EvaluationDetails<T>)
+    return client.getStringDetails(
+      flagKey,
+      defaultValue
+    ) as EvaluationDetails<T>
   } else if (typeof defaultValue === 'number') {
-    const flagDetails = await client.getNumberDetails(flagKey, defaultValue)
-    setFlagDetails(flagDetails as EvaluationDetails<T>)
+    return client.getNumberDetails(
+      flagKey,
+      defaultValue
+    ) as EvaluationDetails<T>
   } else {
-    const flagDetails = await client.getObjectDetails(flagKey, defaultValue)
-    setFlagDetails(flagDetails as EvaluationDetails<T>)
+    return client.getObjectDetails(
+      flagKey,
+      defaultValue
+    ) as EvaluationDetails<T>
   }
 }

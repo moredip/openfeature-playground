@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Client, OpenFeature } from '@openfeature/js-sdk'
+import { Client, OpenFeature } from '@openfeature/web-sdk'
 
 type ProviderProps = {
   client?: Client

@@ -3,8 +3,12 @@ import {
   EvaluationContext,
   JsonValue,
   Logger,
+  OpenFeatureEventEmitter,
   Provider,
+  ProviderEvents,
   ResolutionDetails,
+  ResolutionReason,
+  StandardResolutionReasons,
 } from '@openfeature/web-sdk'
 
 export class ChaosWebProvider implements Provider {
@@ -13,22 +17,38 @@ export class ChaosWebProvider implements Provider {
   } as const
   private _wrappedProvider: Provider
 
+  events = new OpenFeatureEventEmitter()
+
   private _errorCodeToSimulate: ErrorCode | null = null
+  private _resolutionReasonToSimulate: ResolutionReason | null = null
 
   constructor(wrappedProvider: Provider) {
     this._wrappedProvider = wrappedProvider
   }
 
-  simulateError(errorCode: ErrorCode) {
+  simulateError(
+    errorCode: ErrorCode,
+    resolutionReason: ResolutionReason | null = null
+  ) {
     this._errorCodeToSimulate = errorCode
+    this._resolutionReasonToSimulate = resolutionReason
   }
 
   simulateProviderNotReady() {
-    this.simulateError(ErrorCode.PROVIDER_NOT_READY)
+    this.simulateError(
+      ErrorCode.PROVIDER_NOT_READY,
+      StandardResolutionReasons.DEFAULT
+    )
   }
 
   resetChaos() {
     this._errorCodeToSimulate = null
+    this._resolutionReasonToSimulate = null
+  }
+
+  simulateProviderNowReady() {
+    this.resetChaos()
+    this.events.emit(ProviderEvents.Ready)
   }
 
   resolveBooleanEvaluation(
@@ -92,18 +112,13 @@ export class ChaosWebProvider implements Provider {
     defaultValue: T
   ): ResolutionDetails<T> | null {
     if (this._errorCodeToSimulate) {
-      return simulateError(defaultValue, this._errorCodeToSimulate)
+      return {
+        value: defaultValue,
+        errorCode: this._errorCodeToSimulate,
+        reason:
+          this._resolutionReasonToSimulate ?? StandardResolutionReasons.ERROR,
+      }
     }
     return null
-  }
-}
-
-function simulateError<T>(
-  value: T,
-  errorCode: ErrorCode
-): ResolutionDetails<T> {
-  return {
-    value,
-    errorCode,
   }
 }

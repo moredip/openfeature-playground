@@ -1,64 +1,96 @@
-import { ChaosProvider } from '@moredip/openfeature-chaos-provider'
-import { MinimalistProvider } from '@moredip/openfeature-minimalist-provider'
-import { OpenFeature } from '@openfeature/js-sdk'
-import { renderHook } from '@testing-library/react-hooks'
+import { ChaosWebProvider as ChaosProvider } from '@moredip/openfeature-chaos-provider'
+import { WebMinimalistProvider as MinimalistProvider } from '@moredip/openfeature-minimalist-provider'
+import { OpenFeature, StandardResolutionReasons } from '@openfeature/web-sdk'
+import { act, renderHook } from '@testing-library/react-hooks'
 
 import { OpenFeatureProvider } from './provider'
 import { useFeatureFlag } from './useFlag'
 
 describe('useFlag', () => {
-  describe('happy path', () => {
-    it('eventually yields the configured value', async () => {
-      const flags = {
-        'some-flag': 'configured-value',
-      }
-      const provider = new MinimalistProvider(flags)
-      OpenFeature.setProvider(provider)
+  it('reflects the configured flag value as it changes', async () => {
+    const provider = new MinimalistProvider({
+      'some-flag': 'initial-value',
+    })
+    OpenFeature.setProvider(provider)
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => {
-          return useFeatureFlag<string>('some-flag', 'default-value')
-        },
-        { wrapper: OpenFeatureProvider }
-      )
+    const { result } = renderHook(
+      () => {
+        return useFeatureFlag<string>('some-flag', 'blah')
+      },
+      { wrapper: OpenFeatureProvider }
+    )
 
-      // on first render the feature flag will always return the default
-      // value, because the flag lookup is an async operation, but a
-      // render is sync and the hook has to return *something*.
-      expect(result.current).toEqual('default-value')
+    expect(result.current).toMatchObject({
+      value: 'initial-value',
+      isAuthoritative: true,
+      isDefault: false,
+      isError: false,
+      evaluationDetails: {
+        flagKey: 'some-flag',
+        value: 'initial-value',
+      },
+    })
 
-      await waitForNextUpdate()
+    act(() => {
+      provider.replaceConfiguration({
+        'some-flag': 'updated-value',
+      })
+    })
 
-      expect(result.current).toEqual('configured-value')
+    expect(result.current).toMatchObject({
+      value: 'updated-value',
+      isAuthoritative: true,
+      isDefault: false,
+      isError: false,
+      evaluationDetails: {
+        flagKey: 'some-flag',
+        value: 'updated-value',
+      },
     })
   })
 
-  describe('sad paths', () => {
-    it.skip('provider initially not ready', async () => {
-      const flags = {
-        'some-flag': 'configured-value',
-      }
-      const chaosProvider = new ChaosProvider(new MinimalistProvider(flags))
-      chaosProvider.simulateProviderNotReady()
-      OpenFeature.setProvider(chaosProvider)
+  it('updates flag value from default to actual value a provider becomes ready', () => {
+    const flags = {
+      'some-flag': 'configured-value',
+    }
+    const chaosProvider = new ChaosProvider(new MinimalistProvider(flags))
+    chaosProvider.simulateProviderNotReady()
+    OpenFeature.setProvider(chaosProvider)
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => {
-          return useFeatureFlag<string>('some-flag', 'default-value')
-        },
-        { wrapper: OpenFeatureProvider }
-      )
+    const { result } = renderHook(
+      () => {
+        return useFeatureFlag('some-flag', 'default-value')
+      },
+      { wrapper: OpenFeatureProvider }
+    )
 
-      expect(result.current).toEqual('default-value') // default value on initial render
+    expect(result.current).toMatchObject({
+      value: 'default-value',
+      isAuthoritative: false,
+      isError: true,
+      isDefault: true,
+      evaluationDetails: {
+        flagKey: 'some-flag',
+        value: 'default-value',
+        reason: StandardResolutionReasons.DEFAULT,
+      },
+    })
 
-      await waitForNextUpdate()
+    act(() => {
+      chaosProvider.simulateProviderNowReady()
+    })
 
-      expect(result.current).toEqual('default-value') // default value because provider is not ready
-
-      chaosProvider.resetChaos()
-      await waitForNextUpdate()
-
-      expect(result.current).toEqual('configured-value')
+    expect(result.current).toMatchObject({
+      value: 'configured-value',
+      isAuthoritative: true,
+      isError: false,
+      isDefault: false,
+      evaluationDetails: {
+        flagKey: 'some-flag',
+        value: 'configured-value',
+      },
     })
   })
+
+  it('shows reflects stale feature flags', () => {})
 })

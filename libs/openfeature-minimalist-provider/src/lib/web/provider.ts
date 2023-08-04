@@ -6,6 +6,8 @@ import {
   StandardResolutionReasons,
   TypeMismatchError,
   FlagNotFoundError,
+  OpenFeatureEventEmitter,
+  ProviderEvents,
 } from '@openfeature/web-sdk'
 import { FlagConfiguration } from '../flagConfiguration'
 import { bareResolution } from '../resolutionDetail'
@@ -16,12 +18,15 @@ export class MinimalistProvider implements Provider {
   } as const
   private _flagConfiguration: FlagConfiguration
 
+  events = new OpenFeatureEventEmitter()
+
   constructor(flagConfiguration: FlagConfiguration = {}) {
     this._flagConfiguration = flagConfiguration
   }
 
   replaceConfiguration(flagConfiguration: FlagConfiguration) {
     this._flagConfiguration = flagConfiguration
+    this.events.emit(ProviderEvents.ConfigurationChanged)
   }
 
   resolveBooleanEvaluation(
