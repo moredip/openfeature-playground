@@ -34,6 +34,13 @@ export class ChaosWebProvider implements Provider {
     this._resolutionReasonToSimulate = resolutionReason
   }
 
+  simulateProviderNotReadyDelay(delayMs: number) {
+    this.simulateProviderNotReady()
+    setTimeout(() => {
+      this.simulateProviderNowReady()
+    }, delayMs)
+  }
+
   simulateProviderNotReady() {
     this.simulateError(
       ErrorCode.PROVIDER_NOT_READY,

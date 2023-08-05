@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Tabs, Tab, Typography, TextField, Button } from '@mui/material'
+import { Box, Tabs, Tab, Typography, CircularProgress } from '@mui/material'
 
 import { useFeatureFlag } from '@moredip/openfeature-hooks'
 
@@ -52,10 +52,15 @@ type WeatherDetailsProps = {
   weather: Weather
 }
 function WeatherDetails({ weather }: WeatherDetailsProps) {
-  const includeConditions = useFeatureFlag<boolean>(
+  const { value: includeConditions, isAuthoritative } = useFeatureFlag<boolean>(
     'include-conditions-in-weather-display',
     false
   )
+
+  if (!isAuthoritative) {
+    return <CircularProgress />
+  }
+
   return (
     <Box
       sx={{
