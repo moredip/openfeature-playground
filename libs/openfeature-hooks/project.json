@@ -6,23 +6,13 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/rollup:rollup",
+      "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/openfeature-hooks",
+        "main": "libs/openfeature-hooks/src/index.ts",
         "tsConfig": "libs/openfeature-hooks/tsconfig.lib.json",
-        "project": "libs/openfeature-hooks/package.json",
-        "entryFile": "libs/openfeature-hooks/src/index.ts",
-        "external": ["@emotion/react/jsx-runtime"],
-        "rollupConfig": "@nx/react/plugins/bundle-rollup",
-        "compiler": "babel",
-        "assets": [
-          {
-            "glob": "libs/openfeature-hooks/README.md",
-            "input": ".",
-            "output": "."
-          }
-        ]
+        "assets": ["libs/openfeature-hooks/*.md"]
       }
     },
     "lint": {
