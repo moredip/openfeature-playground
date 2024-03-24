@@ -21,24 +21,19 @@
       },
       "dependsOn": [
         {
-          "projects": "self",
           "target": "build"
         }
       ]
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/openfeature-chaos-provider/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/openfeature-chaos-provider"],
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/openfeature-chaos-provider"],
       "options": {
-        "jestConfig": "libs/openfeature-chaos-provider/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/openfeature-chaos-provider/jest.config.ts"
       }
     }
   },
