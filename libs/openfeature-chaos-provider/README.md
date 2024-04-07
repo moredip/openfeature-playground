@@ -1,11 +1,5 @@
 # openfeature-chaos-provider
 
-This library was generated with [Nx](https://nx.dev).
+A meta-provider for OpenFeature which injects [controlled chaos](https://en.wikipedia.org/wiki/Chaos_engineering) into the feature flag evaluation process.
 
-## Building
-
-Run `nx build openfeature-chaos-provider` to build the library.
-
-## Running unit tests
-
-Run `nx test openfeature-chaos-provider` to execute the unit tests via [Jest](https://jestjs.io).
+This provider wraps another provider and simulates "sad path" scenarios: error conditions, delays, back-end connectivity issues.
